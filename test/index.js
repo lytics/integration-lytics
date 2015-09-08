@@ -10,15 +10,23 @@ describe('Lytics', function(){
   var settings;
   var lytics;
   var test;
+  var defaultTest;
 
   beforeEach(function(){
     settings = {
       apiKey: 'LPv7adzJu8IhRMTbgWmaagxx',
       cid: 1289,
-      stream: "test"
+      stream: 'test'
     };
     lytics = new Lytics(settings);
     test = Test(lytics, __dirname);
+
+    defaultSettings = {
+      apiKey: 'LPv7adzJu8IhRMTbgWmaagxx',
+      cid: 1289
+    };
+    defaultLytics = new Lytics(defaultSettings);
+    defaultTest = Test(defaultLytics, __dirname);
   });
 
   it('should have the correct settings', function(){
@@ -99,6 +107,67 @@ describe('Lytics', function(){
         .set(settings)
         .alias(alias)
         .query({ stream: 'test', access_token: settings.apiKey })
+        .sends(json)
+        .requests(1)
+        .expects(200)
+        .end(done);
+    });
+  });
+
+  // test with default values
+  describe('.track()', function(){
+    it('should track successfully', function(done){
+      var track = helpers.track();
+      var json = track.json();
+
+      json.options = json.options || json.context;
+      delete json.context;
+      delete json.projectId;
+
+      defaultTest
+        .set(defaultSettings)
+        .track(track)
+        .query({ stream: 'default', access_token: settings.apiKey })
+        .sends(json)
+        .requests(1)
+        .expects(200)
+        .end(done);
+    });
+  });
+
+  describe('.identify()', function(){
+    it('should identify successfully', function(done){
+      var identify = helpers.identify();
+      var json = identify.json();
+
+      json.options = json.options || json.context;
+      delete json.context;
+      delete json.projectId;
+
+      defaultTest
+        .set(defaultSettings)
+        .identify(identify)
+        .query({ stream: 'default', access_token: settings.apiKey })
+        .sends(json)
+        .requests(1)
+        .expects(200)
+        .end(done);
+    });
+  });
+
+  describe('.alias()', function(){
+    it('should alias successfully', function(done){
+      var alias = helpers.alias();
+      var json = alias.json();
+
+      json.options = json.options || json.context;
+      delete json.context;
+      delete json.projectId;
+
+      defaultTest
+        .set(defaultSettings)
+        .alias(alias)
+        .query({ stream: 'default', access_token: settings.apiKey })
         .sends(json)
         .requests(1)
         .expects(200)
