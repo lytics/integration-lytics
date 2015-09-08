@@ -14,7 +14,8 @@ describe('Lytics', function(){
   beforeEach(function(){
     settings = {
       apiKey: 'LPv7adzJu8IhRMTbgWmaagxx',
-      cid: 1289
+      cid: 1289,
+      stream: "test"
     };
     lytics = new Lytics(settings);
     test = Test(lytics, __dirname);
@@ -57,7 +58,7 @@ describe('Lytics', function(){
       test
         .set(settings)
         .track(track)
-        .query({ access_token: settings.apiKey })
+        .query({ stream: 'test', access_token: settings.apiKey })
         .sends(json)
         .requests(1)
         .expects(200)
@@ -77,7 +78,7 @@ describe('Lytics', function(){
       test
         .set(settings)
         .identify(identify)
-        .query({ access_token: settings.apiKey })
+        .query({ stream: 'test', access_token: settings.apiKey })
         .sends(json)
         .requests(1)
         .expects(200)
@@ -97,7 +98,7 @@ describe('Lytics', function(){
       test
         .set(settings)
         .alias(alias)
-        .query({ access_token: settings.apiKey })
+        .query({ stream: 'test', access_token: settings.apiKey })
         .sends(json)
         .requests(1)
         .expects(200)
